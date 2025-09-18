@@ -1,0 +1,65 @@
+interface BallonI {
+    id: number
+    isPublic: boolean
+}
+
+/**
+ * @description имитация fetch. возвращает количество шариков
+ * @param {Number} id ID шарика по цвету
+ * @returns {Number} количество шариков
+ * @example const res = await fetchBallonAmount(202);
+ */
+async function fetchBallonAmount(id: BallonI['id']): Promise<number> {
+	const RANDOM_TIMEOUT: number = Math.ceil(Math.random() * 10000); // 1-9 секунд
+	const RANDOM_AMOUNT: number = Math.ceil(Math.random() * id); // случайное число
+
+	return new Promise(resolve => setTimeout(() => resolve(RANDOM_AMOUNT), RANDOM_TIMEOUT))
+	.then(result => );
+}
+
+// данные о шариках
+const BALLONS: { [key: string]: BallonI } = {
+	red: {
+		id: 202,
+		isPublic: true,
+	},
+	blue: {
+		id: 356,
+		isPublic: false,
+	},
+	yellow: {
+		id: 451,
+		isPublic: false,
+	},
+	black: {
+		id: 35,
+		isPublic: true,
+	},
+	green: {
+		id: 191,
+		isPublic: true,
+	},
+	white: {
+		id: 911,
+		isPublic: true,
+	},
+};
+
+// Ваш код здесь
+// РЕШЕНИЕ:
+// Функция которое возвращает сумму кол-ва всех шариков у которых isPublic равен true,
+// Кратко говоря тут происходит фильтрация данных на isPublic, после все пройденные промисы
+// пушаются в promises и дальше через Promise.all получаем массив результатов всех промисов
+// и в самом конце возвращаем AllBallonsAmount полученный через reduce.
+const getPublicBallonsAmount = async () => {
+  let promises = [];
+  for (const ballon in BALLONS) {
+    if (BALLONS[ballon].isPublic) {
+      promises.push(fetchBallonAmount(BALLONS[ballon].id));
+    }
+  }
+  const results = await Promise.all(promises);
+  const AllBallonsAmount = results.reduce((sum, value) => sum + value, 0);
+
+  return AllBallonsAmount;
+};
