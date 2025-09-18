@@ -1,0 +1,18 @@
+import { useState } from "react";
+
+// РЕШЕНИЕ:
+// Внес все в один общий компонент который принимает children что делает его универсальным
+export const UniversalBlock = ({mouseEnterCallbak, children}) => {
+  const [isActive, setActive] = useState(false);
+
+  const mouseEnterHandler = () => {
+    setActive(true);
+    mouseEnterCallbak();
+  };
+
+  return (
+    <div onMouseEnter={mouseEnterHandler} className={isActive ? "active" : ""}>
+      {children}
+    </div>
+  );
+};
